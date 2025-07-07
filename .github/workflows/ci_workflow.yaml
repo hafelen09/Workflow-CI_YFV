@@ -30,6 +30,11 @@ jobs:
         shell: bash -l {0}
         run: mlflow run ./MLProject
 
+      # === LANGKAH DEBUG BARU ===
+      - name: Debug - List contents of mlruns
+        run: ls -R mlruns
+      # ==========================
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
