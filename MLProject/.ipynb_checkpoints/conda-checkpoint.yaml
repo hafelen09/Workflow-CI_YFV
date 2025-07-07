@@ -1,0 +1,10 @@
+name: churn_prediction_env
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+    - pandas
+    - scikit-learn==1.6.1 # Pastikan versi sama
+    - joblib
