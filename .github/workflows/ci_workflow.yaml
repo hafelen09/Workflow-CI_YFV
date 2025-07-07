@@ -30,10 +30,11 @@ jobs:
         shell: bash -l {0}
         run: mlflow run ./MLProject
 
-      # === LANGKAH DEBUG BARU ===
-      - name: Debug - List contents of mlruns
-        run: ls -R mlruns
-      # ==========================
+      # === LANGKAH BARU UNTUK MENDAPATKAN RUN ID ===
+      - name: Get latest MLflow run ID
+        id: get_run_id
+        run: echo "RUN_ID=$(ls -t mlruns/0 | head -1)" >> $GITHUB_ENV
+      # ============================================
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -43,4 +44,5 @@ jobs:
 
       - name: Build and push Docker image
         # Ganti 'username_anda' dengan username Docker Hub Anda
-        run: mlflow models build-docker --model-uri "mlruns/0/$(ls -t mlruns/0/ | head -1)/artifacts/model" --name "hafelen09/churn-prediction-model"
+        # Gunakan variabel ${{ env.RUN_ID }} yang sudah kita tangkap
+        run: mlflow models build-docker --model-uri "mlruns/0/${{ env.RUN_ID }}/artifacts/model" --name "hafelen09/churn-prediction-model"
