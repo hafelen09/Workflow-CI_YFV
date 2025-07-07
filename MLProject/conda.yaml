@@ -8,3 +8,4 @@ dependencies:
     - pandas
     - scikit-learn==1.6.1 # Pastikan versi sama
     - joblib
+    - mlflow
