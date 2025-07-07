@@ -31,12 +31,23 @@ jobs:
         shell: bash -l {0}
         run: mlflow run ./MLProject 2>&1 | tee mlflow_run_output.txt
 
-      # Langkah B: Ekstrak Run ID dari log dan simpan sebagai variabel
+      # Langkah B: Debug untuk melihat isi file log
+      - name: Debug - Show log file content
+        run: cat mlflow_run_output.txt
+
+      # Langkah C: Ekstrak Run ID dari log dan simpan sebagai variabel
       - name: Extract Run ID from log
         run: |
           RUN_ID=$(grep "Finished run with ID" mlflow_run_output.txt | sed 's/.*ID: //;s/ ===//')
           echo "RUN_ID=${RUN_ID}" >> $GITHUB_ENV
-          echo "Extracted Run ID is: ${RUN_ID}"
+          echo "Value of extracted RUN_ID is: [${RUN_ID}]"
+
+      # Langkah D: Debug untuk melihat perintah final sebelum dijalankan
+      - name: Debug - Show final command
+        # Ganti 'username_anda' dengan username Docker Hub Anda
+        run: |
+          echo "Final command to be executed:"
+          echo "mlflow models build-docker --model-uri 'runs:/${{ env.RUN_ID }}/model' --name 'username_anda/churn-prediction-model'"
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -44,7 +55,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Langkah C: Gunakan variabel RUN_ID untuk membuat URI yang benar dan valid
+      # Langkah E: Gunakan variabel RUN_ID untuk membuat URI yang benar
       - name: Build and push Docker image
         # Ganti 'username_anda' dengan username Docker Hub Anda
         run: mlflow models build-docker --model-uri "runs:/${{ env.RUN_ID }}/model" --name "hafelen09/churn-prediction-model"
