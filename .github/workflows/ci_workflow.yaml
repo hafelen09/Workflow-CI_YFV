@@ -8,21 +8,27 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read # Izin default sudah cukup di sini
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up Python and MLflow
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.12'
-      - run: pip install mlflow
+
+      # === TAMBAHKAN LANGKAH INI ===
+      - name: Set up Conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          python-version: '3.12'
+      # ============================
+
+      - name: Install MLflow
+        run: pip install mlflow
 
       - name: Run MLflow Project to train model
-        # Perintah ini akan membaca file MLProject dan menjalankan training
-        # Hasilnya akan tersimpan di folder 'mlruns'
         run: mlflow run ./MLProject
 
       - name: Log in to Docker Hub
@@ -33,5 +39,4 @@ jobs:
 
       - name: Build and push Docker image
         # Ganti 'username_anda' dengan username Docker Hub Anda
-        # Perintah ini akan mengambil model terakhir dari mlruns dan membuat Docker image
         run: mlflow models build-docker --model-uri "runs:/$(ls -t mlruns/0/ | head -1)/artifacts/model" --name "hafelen09/churn-prediction-model"
