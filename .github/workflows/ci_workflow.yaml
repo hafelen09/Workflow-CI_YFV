@@ -26,7 +26,7 @@ jobs:
       - name: Install MLflow
         run: pip install mlflow
 
-      # Jalankan MLflow Project. Ini akan membuat folder mlruns dengan struktur yang benar.
+      # Jalankan MLflow Project. Ini akan membuat folder 'output/model'
       - name: Run MLflow Project to train model
         shell: bash -l {0}
         run: mlflow run ./MLProject
@@ -37,7 +37,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Ambil ID run terbaru dan bangun Docker image
+      # Bangun Docker image dari folder output yang sudah pasti
       - name: Build and push Docker image
         # Ganti 'username_anda' dengan username Docker Hub Anda
-        run: mlflow models build-docker --model-uri "runs:/$(ls -t mlruns/0 | head -1)/artifacts/model" --name "hafelen09/churn-prediction-model"
+        run: mlflow models build-docker --model-uri "./MLProject/output/model" --name "hafelen09/churn-prediction-model"
