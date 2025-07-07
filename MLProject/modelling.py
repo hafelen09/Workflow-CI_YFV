@@ -2,6 +2,8 @@
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 import joblib
+import mlflow
+import mlflow.sklearn
 
 # Muat data dan scaler
 df = pd.read_csv('telco-customer-churn_preprocessing/churn_data_processed.csv')
