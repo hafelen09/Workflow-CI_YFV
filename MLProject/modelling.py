@@ -16,12 +16,11 @@ y = df['Churn']
 # Gunakan scaler yang sudah di-fit
 X_scaled = scaler.transform(X)
 
-# Latih model dengan parameter terbaik dari Kriteria 2
-# Ganti parameter jika Anda menemukan yang lebih baik
+# Latih model dengan parameter terbaik
 final_model = RandomForestClassifier(n_estimators=100, max_depth=20, min_samples_leaf=4, random_state=42)
 final_model.fit(X_scaled, y)
 
-# Simpan model yang sudah dilatih
-joblib.dump(final_model, 'final_model.joblib')
+# Gunakan mlflow untuk menyimpan model dengan nama "model"
+mlflow.sklearn.log_model(final_model, "model")
 
-print("Model telah dilatih dan disimpan sebagai final_model.joblib")
+print("Model telah dilatih dan dilog ke MLflow sebagai 'model'")
