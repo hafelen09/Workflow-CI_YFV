@@ -5,7 +5,6 @@ import joblib
 import mlflow
 import mlflow.sklearn
 
-
 # Muat data dan scaler
 df = pd.read_csv('telco-customer-churn_preprocessing/churn_data_processed.csv')
 scaler = joblib.load('scaler.joblib')
@@ -16,6 +15,7 @@ y = df['Churn']
 
 # Gunakan scaler yang sudah di-fit
 X_scaled = scaler.transform(X)
+
 
 # Latih model dengan parameter terbaik dari Kriteria 2
 final_model = RandomForestClassifier(n_estimators=100, max_depth=20, min_samples_leaf=4, random_state=42)
